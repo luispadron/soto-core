@@ -79,8 +79,8 @@ let package = Package(
             dependencies: [
                 .byName(name: "SotoCore"),
                 .byName(name: "SotoTestUtils"),
-            ],
-            swiftSettings: [.unsafeFlags(["-Xfrontend", "-enable-experimental-concurrency"])]
+            ]
+            ,swiftSettings: [.unsafeFlags(["-Xfrontend", "-enable-experimental-concurrency"])]
         ),
         .testTarget(name: "SotoSignerV4Tests", dependencies: [
             .byName(name: "SotoSignerV4"),
