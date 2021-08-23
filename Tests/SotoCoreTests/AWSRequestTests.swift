@@ -413,7 +413,7 @@ class AWSRequestTests: XCTestCase {
         ))
         XCTAssertEqual(request?.url.absoluteString, "https://12345678.test.com/")
     }
-    
+
     func testBodyIsEmpty() {
         var body: Body = .empty
         XCTAssertTrue(body.isEmpty)
@@ -427,5 +427,33 @@ class AWSRequestTests: XCTestCase {
         XCTAssertFalse(body.isEmpty)
         body = .xml(.init(name: "test"))
         XCTAssertFalse(body.isEmpty)
+    }
+    
+    func testMD5Checksum() {
+        struct Input: AWSEncodableShape {
+            static let _options: AWSShapeOptions = .md5ChecksumRequired
+            let q: [String: Int]
+        }
+        let input = Input(q: ["one": 1, "two": 2])
+        let config = createServiceConfig(region: .useast2, service: "myservice")
+        var request: AWSRequest?
+        XCTAssertNoThrow(request = try AWSRequest(operation: "Test", path: "/", httpMethod: .GET, input: input, configuration: config))
+        XCTAssertEqual(request?.httpHeaders["Content-MD5"].first, "TrOJRaZGSdR6p5yTPZ/CDg==")
+    }
+
+    func testMD5ChecksumSetAlready() {
+        struct Input: AWSEncodableShape {
+            static let _options: AWSShapeOptions = .md5ChecksumRequired
+            static let _encoding: [AWSMemberEncoding] = [
+                .init(label: "checksum", location: .header(locationName: "Content-MD5")),
+            ]
+            let checksum: String?
+            let q: [String: Int]
+        }
+        let input = Input(checksum: "Set already", q: ["one": 1, "two": 2])
+        let config = createServiceConfig(region: .useast2, service: "myservice")
+        var request: AWSRequest?
+        XCTAssertNoThrow(request = try AWSRequest(operation: "Test", path: "/", httpMethod: .GET, input: input, configuration: config))
+        XCTAssertEqual(request?.httpHeaders["Content-MD5"].first, "Set already")
     }
 }
