@@ -27,7 +27,7 @@ class EndpointDiscoveryAsyncTests: XCTestCase, @unchecked Sendable {
         let config: AWSServiceConfig
         let endpointStorage: AWSEndpointStorage
         let endpointToDiscover: String
-        let getEndpointsCalledCount: Int
+        var getEndpointsCalledCount: Int
 
         required init(from: EndpointDiscoveryAsyncTests.Service, patch: AWSServiceConfig.Patch) {
             self.client = from.client
@@ -56,7 +56,7 @@ class EndpointDiscoveryAsyncTests: XCTestCase, @unchecked Sendable {
         struct TestRequest: AWSEncodableShape {}
 
         public func getEndpoints(logger: Logger, on eventLoop: EventLoop) -> EventLoopFuture<AWSEndpoints> {
-            //self.getEndpointsCalledCount += 1
+            self.getEndpointsCalledCount += 1
             return eventLoop.scheduleTask(in: .milliseconds(200)) {
                 return AWSEndpoints(endpoints: [.init(address: self.endpointToDiscover, cachePeriodInMinutes: 60)])
             }.futureResult
@@ -76,7 +76,7 @@ class EndpointDiscoveryAsyncTests: XCTestCase, @unchecked Sendable {
         }
 
         public func getEndpointsDontCache(logger: Logger, on eventLoop: EventLoop) -> EventLoopFuture<AWSEndpoints> {
-            //self.getEndpointsCalledCount += 1
+            self.getEndpointsCalledCount += 1
             return eventLoop.scheduleTask(in: .milliseconds(200)) {
                 return AWSEndpoints(endpoints: [.init(address: self.endpointToDiscover, cachePeriodInMinutes: 0)])
             }.futureResult
