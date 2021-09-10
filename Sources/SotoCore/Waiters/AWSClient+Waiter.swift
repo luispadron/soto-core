@@ -115,7 +115,7 @@ extension AWSClient {
                 .whenComplete { result in
                     var acceptorState: WaiterState?
                     for acceptor in waiter.acceptors {
-                        if acceptor.matcher.match(result: result.map { $0 }) {
+                        if acceptor.matcher.match(result: result.map({ $0 })) {
                             acceptorState = acceptor.state
                             break
                         }

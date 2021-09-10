@@ -39,7 +39,7 @@ public struct AWSEndpoints {
 }
 
 /// Class for storing Endpoint details
-public class AWSEndpointStorage {
+public final class AWSEndpointStorage {
     /// endpoint url
     public var endpoint: String
     /// when endpoint expires
@@ -120,3 +120,12 @@ public struct AWSEndpointDiscovery {
         return self.storage.getEndpoint(discover: self.discover, logger: logger, on: eventLoop)
     }
 }
+
+#if compiler(>=5.5)
+
+@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+extension AWSEndpointDiscovery: @unchecked Sendable {}
+@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+extension AWSEndpointStorage: @unchecked Sendable {}
+
+#endif

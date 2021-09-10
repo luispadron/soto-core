@@ -56,18 +56,18 @@ class AWSRequestTests: XCTestCase {
     }
 
     func testCreateAwsRequestWithKeywordInQuery() {
-        struct KeywordRequest: AWSEncodableShape {
+        struct KeywordRequest2: AWSEncodableShape {
             static var _encoding: [AWSMemberEncoding] = [
-                AWSMemberEncoding(label: "self", location: .querystring(locationName: "self")),
+                AWSMemberEncoding(label: "while", location: .querystring(locationName: "while")),
             ]
-            let `self`: String
+            let `while`: String
         }
         let config = createServiceConfig(region: .cacentral1, service: "s3")
 
-        let request = KeywordRequest(self: "KeywordRequest")
+        let request = KeywordRequest2(while: "KeywordRequest")
         var awsRequest: AWSRequest?
         XCTAssertNoThrow(awsRequest = try AWSRequest(operation: "Keyword", path: "/", httpMethod: .POST, input: request, configuration: config))
-        XCTAssertEqual(awsRequest?.url, URL(string: "https://s3.ca-central-1.amazonaws.com/?self=KeywordRequest")!)
+        XCTAssertEqual(awsRequest?.url, URL(string: "https://s3.ca-central-1.amazonaws.com/?while=KeywordRequest")!)
     }
 
     func testCreateNIORequest() {

@@ -21,13 +21,13 @@ import SotoTestUtils
 import XCTest
 
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-class EndpointDiscoveryAsyncTests: XCTestCase {
-    class Service: AWSService {
+class EndpointDiscoveryAsyncTests: XCTestCase, @unchecked Sendable {
+    final class Service: AWSService, @unchecked Sendable {
         let client: AWSClient
         let config: AWSServiceConfig
         let endpointStorage: AWSEndpointStorage
         let endpointToDiscover: String
-        var getEndpointsCalledCount: Int
+        let getEndpointsCalledCount: Int
 
         required init(from: EndpointDiscoveryAsyncTests.Service, patch: AWSServiceConfig.Patch) {
             self.client = from.client
@@ -56,7 +56,7 @@ class EndpointDiscoveryAsyncTests: XCTestCase {
         struct TestRequest: AWSEncodableShape {}
 
         public func getEndpoints(logger: Logger, on eventLoop: EventLoop) -> EventLoopFuture<AWSEndpoints> {
-            self.getEndpointsCalledCount += 1
+            //self.getEndpointsCalledCount += 1
             return eventLoop.scheduleTask(in: .milliseconds(200)) {
                 return AWSEndpoints(endpoints: [.init(address: self.endpointToDiscover, cachePeriodInMinutes: 60)])
             }.futureResult
@@ -76,7 +76,7 @@ class EndpointDiscoveryAsyncTests: XCTestCase {
         }
 
         public func getEndpointsDontCache(logger: Logger, on eventLoop: EventLoop) -> EventLoopFuture<AWSEndpoints> {
-            self.getEndpointsCalledCount += 1
+            //self.getEndpointsCalledCount += 1
             return eventLoop.scheduleTask(in: .milliseconds(200)) {
                 return AWSEndpoints(endpoints: [.init(address: self.endpointToDiscover, cachePeriodInMinutes: 0)])
             }.futureResult

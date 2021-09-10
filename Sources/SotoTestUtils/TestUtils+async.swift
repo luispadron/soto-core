@@ -21,7 +21,7 @@ import SotoCore
 import XCTest
 
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-public func XCTRunAsyncAndBlock(_ closure: @escaping () async throws -> Void) {
+public func XCTRunAsyncAndBlock(_ closure: @Sendable @escaping () async throws -> Void) {
     let dg = DispatchGroup()
     dg.enter()
     Task {

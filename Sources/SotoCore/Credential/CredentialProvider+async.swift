@@ -21,7 +21,7 @@ import SotoSignerV4
 
 /// Async Protocol for providing credentials
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-public protocol AsyncCredentialProvider: CredentialProvider {
+public protocol AsyncCredentialProvider: CredentialProvider, Sendable {
     /// Return credential
     /// - Parameters:
     ///   - eventLoop: EventLoop to run on
